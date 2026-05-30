@@ -101,26 +101,22 @@ int main(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
+  GPIO_InitStruct.Pin = GPIO_PIN_4;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = GPIO_PIN_5;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = GPIO_PIN_6;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  
   HAL_Init();
   SystemClock_Config();
 
   MX_GPIO_Init();
 
   os_init();
-  os_start();   // never returns
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-    /* USER CODE END WHILE */
-    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-
-    HAL_Delay(500);
-    /* USER CODE BEGIN 3 */
-  }
-  /* USER CODE END 3 */
+  os_start(); 
 }
 
 /**
@@ -207,6 +203,7 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
