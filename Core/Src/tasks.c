@@ -1,27 +1,22 @@
 #include "tasks.h"
 #include "stm32f1xx_hal.h"
-
-task_t tasks[] =
-{
-    {taskA, 100, 0, 1},
-    {taskB, 500, 0, 1},
-    {taskC, 1000, 0, 1},
-};
-const uint32_t NUM_TASKS =
-    sizeof(tasks) / sizeof(tasks[0]);
+#include "os.h"
 
 void taskA(void)
 {
     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_4); 
+    task_sleep(100);
 }
 
 void taskB(void)
 {
     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); 
+    task_sleep(1000);
 }
 
 void taskC(void)
 {
     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6); 
+    task_sleep(10000);
 }
 

@@ -1,17 +1,22 @@
+#pragma once
 #include "time.h"
 
 typedef void (*task_fn_t)(void);
 
+typedef enum {
+    TASK_READY,
+    TASK_RUNNING,
+    TASK_SLEEPING
+} task_state_t;
+
 typedef struct
 {
     task_fn_t function;
-    uint32_t interval;
-    uint32_t last_run;
     uint8_t priority;
-} task_t;
 
-extern task_t tasks[];
-extern const uint32_t NUM_TASKS;
+    uint32_t wake_time;
+    task_state_t state;
+} task_t;
 
 void taskA(void);
 void taskB(void);

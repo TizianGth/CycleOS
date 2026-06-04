@@ -13,3 +13,9 @@ void os_start(void)
         scheduler_run();
     }
 }
+
+void task_sleep(uint32_t ms)
+{
+    current_task->wake_time = time_now() + ms;
+    current_task->state = TASK_SLEEPING;
+}
