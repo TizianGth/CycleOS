@@ -1,11 +1,16 @@
 #include "scheduler.h"
 
+volatile uint8_t schedule_flag = 0;
+
+uint32_t taskA_stack[DEFAULT_STACK_SIZE];
+uint32_t taskB_stack[DEFAULT_STACK_SIZE];
+uint32_t taskC_stack[DEFAULT_STACK_SIZE];
 
 task_t tasks[] =
 {
-    {taskA, 1, 0, TASK_READY},
-    {taskB, 1, 0, TASK_READY},
-    {taskC, 1, 0, TASK_READY},
+    {taskA, 1, 0, TASK_READY, taskA_stack},
+    {taskB, 1, 0, TASK_READY, taskB_stack},
+    {taskC, 1, 0, TASK_READY, taskC_stack},
 };
 const size_t NUM_TASKS = sizeof(tasks) / sizeof(tasks[0]);
 task_t* current_task = NULL;

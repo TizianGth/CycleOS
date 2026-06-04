@@ -1,4 +1,5 @@
 #include "os.h"
+#include "stm32f1xx_hal.h"
 
 void os_init(void)
 {
@@ -8,9 +9,8 @@ void os_init(void)
 
 void os_start(void)
 {
-    while (1)
-    {
-        scheduler_run();
+    while(1) {
+        __WFI();
     }
 }
 

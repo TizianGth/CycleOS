@@ -1,4 +1,5 @@
 #include "time.h"
+#include "scheduler.h"
 
 volatile uint32_t os_ticks = 0;
 
