@@ -3,6 +3,11 @@
 
 #define DEFAULT_STACK_SIZE 64
 
+#define PRIORITY_HIGHEST 0
+#define PRIORITY_NORMAL  5
+#define PRIORITY_LOW     10
+#define PRIORITY_IDLE    255
+
 typedef void (*task_fn_t)(void);
 
 typedef enum {
@@ -13,14 +18,15 @@ typedef enum {
 
 typedef struct
 {
+    uint32_t *sp;
     task_fn_t function;
     uint8_t priority;
 
     uint32_t wake_time;
     task_state_t state;
-    uint32_t *stack_ptr;
 } task_t;
 
+void idle(void);
 void taskA(void);
 void taskB(void);
 void taskC(void);

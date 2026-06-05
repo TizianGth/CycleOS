@@ -168,15 +168,30 @@ void DebugMon_Handler(void)
 /**
   * @brief This function handles Pendable request for system service.
   */
-void PendSV_Handler(void)
-{
-  /* USER CODE BEGIN PendSV_IRQn 0 */
-  scheduler_run();
-  /* USER CODE END PendSV_IRQn 0 */
-  /* USER CODE BEGIN PendSV_IRQn 1 */
 
-  /* USER CODE END PendSV_IRQn 1 */
+__attribute__((naked)) void PendSV_Handler(void)
+{
+    __asm volatile(
+        "MRS   r0, psp              \n"
+        "CBZ   r0, 1f               \n"
+        "STMDB r0!, {r4-r11}        \n"
+        "LDR   r1, =current_task    \n"
+        "LDR   r2, [r1]             \n"
+        "STR   r0, [r2]             \n"
+        "1:                         \n"
+        "PUSH  {lr}                 \n"   // save EXC_RETURN
+        "BL    pick_next_task       \n"
+        "POP   {lr}                 \n"   // restore EXC_RETURN
+        "LDR   r1, =current_task    \n"
+        "LDR   r2, [r1]             \n"
+        "LDR   r0, [r2]             \n"
+        "LDMIA r0!, {r4-r11}        \n"
+        "MSR   psp, r0              \n"
+        "ISB                        \n"
+        "BX    lr                   \n"
+    );
 }
+
 
 /**
   * @brief This function handles System tick timer.
@@ -189,6 +204,7 @@ void SysTick_Handler(void)
   HAL_IncTick();
   HAL_SYSTICK_IRQHandler();
   SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;
+
   /* USER CODE BEGIN SysTick_IRQn 1 */
 
   /* USER CODE END SysTick_IRQn 1 */

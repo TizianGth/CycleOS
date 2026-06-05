@@ -67,56 +67,31 @@ static void MX_I2C1_Init(void);
   */
 int main(void)
 {
+    HAL_Init();
+    __disable_irq();
+    SystemClock_Config();
 
-  /* USER CODE BEGIN 1 */
+    NVIC_SetPriority(PendSV_IRQn, (1U << __NVIC_PRIO_BITS) - 1U);
+    NVIC_SetPriority(SysTick_IRQn, (1U << __NVIC_PRIO_BITS) - 1U);
 
-  /* USER CODE END 1 */
+    SysTick_Config(SystemCoreClock / 1000);
 
-  /* MCU Configuration--------------------------------------------------------*/
+    MX_GPIO_Init();
+    MX_I2C1_Init();
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+    __HAL_RCC_GPIOA_CLK_ENABLE();
 
-  /* USER CODE BEGIN Init */
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
+    GPIO_InitStruct.Pin = GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_6;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /* USER CODE END Init */
+    os_init();
+    os_start();
 
-  /* Configure the system clock */
-  SystemClock_Config();
-
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
-
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_I2C1_Init();
-  /* USER CODE BEGIN 2 */
-
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
-  GPIO_InitStruct.Pin = GPIO_PIN_13;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-  GPIO_InitStruct.Pin = GPIO_PIN_4;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-    GPIO_InitStruct.Pin = GPIO_PIN_5;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-    GPIO_InitStruct.Pin = GPIO_PIN_6;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-  
-  HAL_Init();
-  SystemClock_Config();
-
-  MX_GPIO_Init();
-
-  os_init();
-  os_start(); 
+    while (1); // safety trap
 }
 
 /**

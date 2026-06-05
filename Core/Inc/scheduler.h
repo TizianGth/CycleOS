@@ -1,6 +1,8 @@
 #pragma once
 #include "tasks.h"
-void scheduler_run(void);
+#include <stdbool.h>
+
+void pick_next_task(void);
 
 extern task_t tasks[];
 extern const size_t NUM_TASKS;
