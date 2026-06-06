@@ -2,9 +2,6 @@
 
 #define ADDRESS 0x3C << 1 // 7-bit address shifted for HAL functions
 
-#define SSD1306_WIDTH 128
-#define SSD1306_HEIGHT 64
-
 uint8_t buffer[SSD1306_WIDTH * SSD1306_HEIGHT / 8];
 
 I2C_HandleTypeDef* SSD1306_HI2C1 = NULL;
@@ -38,11 +35,10 @@ void SSD1306_Init(I2C_HandleTypeDef* hi2c)
   HAL_I2C_Master_Transmit(SSD1306_HI2C1, ADDRESS, init, sizeof(init), 100);
 }
 
-void SSD1306_SetPixel(uint8_t x, uint8_t y)
+void SSD1306_Set_Pixel(uint8_t x, uint8_t y)
 {
-  if (x >= SSD1306_WIDTH || y >= SSD1306_HEIGHT) return;
-
-  buffer[x + y * SSD1306_WIDTH / 8] |= (1 << (y % 8));
+    if (x >= SSD1306_WIDTH || y >= SSD1306_HEIGHT) return;
+    buffer[(y / 8) * SSD1306_WIDTH + x] |= (1u << (y & 7));
 }
 
 bool SSD1306_Try_Update()
