@@ -23,6 +23,7 @@ typedef struct
     uint8_t priority;
 
     uint32_t wake_time;
+    uint32_t last_run_time;
     task_state_t state;
 } task_t;
 

@@ -28,7 +28,7 @@ void taskB(void)
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); 
         task_sleep(100);
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5); 
-        task_sleep(700);
+        task_sleep((100*8)-100);
     }
 }
 
@@ -39,7 +39,7 @@ void taskC(void)
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6); 
         task_sleep(100);
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6); 
-        task_sleep(1500);
+        task_sleep((100*8*2)-100);
     }
 }
 

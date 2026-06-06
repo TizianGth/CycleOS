@@ -2,12 +2,10 @@
 #include "stm32f1xx_hal.h"
 
 void os_init(void)
-{    
-     tasks[0].sp = stack_init(tasks[0].sp, tasks[0].function);
-    tasks[1].sp = stack_init(tasks[1].sp, tasks[1].function);
-    tasks[2].sp = stack_init(tasks[2].sp, tasks[2].function);
-    tasks[3].sp = stack_init(tasks[3].sp, tasks[3].function);
-    current_task = &tasks[0];
+{   
+    for(size_t i = 0; i < NUM_TASKS; i++) 
+        tasks[i].sp = stack_init(tasks[i].sp, tasks[i].function);
+    current_task = idle_task;
 }
 
 void os_start(void)

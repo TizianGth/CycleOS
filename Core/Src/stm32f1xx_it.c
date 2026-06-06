@@ -172,23 +172,25 @@ void DebugMon_Handler(void)
 __attribute__((naked)) void PendSV_Handler(void)
 {
     __asm volatile(
-        "MRS   r0, psp              \n"
-        "CBZ   r0, 1f               \n"
-        "STMDB r0!, {r4-r11}        \n"
-        "LDR   r1, =current_task    \n"
-        "LDR   r2, [r1]             \n"
-        "STR   r0, [r2]             \n"
-        "1:                         \n"
-        "PUSH  {lr}                 \n"   // save EXC_RETURN
-        "BL    pick_next_task       \n"
-        "POP   {lr}                 \n"   // restore EXC_RETURN
-        "LDR   r1, =current_task    \n"
-        "LDR   r2, [r1]             \n"
-        "LDR   r0, [r2]             \n"
-        "LDMIA r0!, {r4-r11}        \n"
-        "MSR   psp, r0              \n"
-        "ISB                        \n"
-        "BX    lr                   \n"
+        "MRS   r0, psp                    \n"
+        "CBZ   r0, 1f                     \n" // valid stack pointer to save?
+        "STMDB r0!, {r4-r11}              \n"
+        "LDR   r1, =current_task          \n"
+        "LDR   r2, [r1]                   \n"
+        "STR   r0, [r2]                   \n"
+        "1:                               \n"
+        "PUSH  {lr}                       \n"   // save EXC_RETURN
+        "BL    update_sleeping_tasks      \n"
+        "BL    pick_next_task             \n"
+        "BL    update_current_task_time   \n"
+        "POP   {lr}                       \n"   // restore EXC_RETURN
+        "LDR   r1, =current_task          \n"
+        "LDR   r2, [r1]                   \n"
+        "LDR   r0, [r2]                   \n"
+        "LDMIA r0!, {r4-r11}              \n"
+        "MSR   psp, r0                    \n"
+        "ISB                              \n"
+        "BX    lr                         \n"
     );
 }
 
