@@ -88,7 +88,7 @@ int main(void)
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-    os_init();
+    os_init(&hi2c1);
     os_start();
 
     while (1); // safety trap

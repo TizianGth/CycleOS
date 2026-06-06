@@ -56,3 +56,5 @@ TouchGFX/simulator/msvs/.vs
 
 .vscode
 .settings
+.cache
+compile_commands.json

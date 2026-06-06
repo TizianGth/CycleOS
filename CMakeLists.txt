@@ -48,6 +48,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     Core/Src/scheduler.c
     Core/Src/time.c
     Core/Src/tasks.c
+    Core/Src/SSD1306.c
 )
 
 # Add include paths
