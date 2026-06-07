@@ -31,5 +31,5 @@ void idle(void);
 void taskA(void);
 void taskB(void);
 void taskC(void);
-
+void renderTicks(void);
 

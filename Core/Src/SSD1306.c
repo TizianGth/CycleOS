@@ -26,7 +26,7 @@ void SSD1306_Draw_String(int x, int y, const char* str)
 }
 
 void SSD1306_Draw_Char(int x, int y, char c) {
-    y += (int)(font->yAdvance+1)/2;
+    y += (int)(font->yAdvance+1)/2; // Adjust y to vertically center the text; rounding up
     if (c < FreeSans10pt7b.first || c > FreeSans10pt7b.last)
         return;
 
@@ -127,4 +127,19 @@ bool SSD1306_Try_Update()
         HAL_I2C_Master_Transmit(SSD1306_HI2C1, ADDRESS, data, 129, 100);
     }
     return true;
+}
+
+void SSD1306_ClearArea(uint8_t x0, uint8_t y0,
+                       uint8_t x1, uint8_t y1)
+{
+    for (uint8_t y = y0; y < y1; y++)
+    {
+        for (uint8_t x = x0; x < x1; x++)
+        {
+            uint16_t index = x + (y / 8) * 128;
+            uint8_t bit = 1 << (y & 7);
+
+            buffer[index] &= ~bit;
+        }
+    }
 }
