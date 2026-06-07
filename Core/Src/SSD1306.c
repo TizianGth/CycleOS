@@ -1,10 +1,68 @@
 #include "SSD1306.h"
+#include "FreeSans10pt7b.h"
+
 
 #define ADDRESS 0x3C << 1 // 7-bit address shifted for HAL functions
 
 uint8_t buffer[SSD1306_WIDTH * SSD1306_HEIGHT / 8];
 
 I2C_HandleTypeDef* SSD1306_HI2C1 = NULL;
+
+const GFXfont *font = &FreeSans10pt7b;
+
+void SSD1306_Draw_String(int x, int y, const char* str)
+{
+    while (*str)
+    {
+        char c = *str++;
+
+        const GFXglyph *glyph =
+            &font->glyph[c - font->first];
+
+        SSD1306_Draw_Char(x, y, c);
+
+        x += glyph->xAdvance;
+    }
+}
+
+void SSD1306_Draw_Char(int x, int y, char c) {
+    y += (int)(font->yAdvance+1)/2;
+    if (c < FreeSans10pt7b.first || c > FreeSans10pt7b.last)
+        return;
+
+    const GFXglyph *glyph =
+        &FreeSans10pt7b.glyph[c - FreeSans10pt7b.first];
+
+    const uint8_t *bitmap =
+        FreeSans10pt7b.bitmap + glyph->bitmapOffset;
+
+    uint8_t w = glyph->width;
+    uint8_t h = glyph->height;
+
+    uint8_t bit = 0;
+    uint8_t bits = 0;
+
+    for (uint8_t yy = 0; yy < h; yy++)
+    {
+        for (uint8_t xx = 0; xx < w; xx++)
+        {
+            if ((bit++ & 7) == 0)
+            {
+                bits = *bitmap++;
+            }
+
+            if (bits & 0x80)
+            {
+                SSD1306_Set_Pixel(
+                    x + glyph->xOffset + xx,
+                    y + glyph->yOffset + yy
+                );
+            }
+
+            bits <<= 1;
+        }
+    }
+}
 
 void SSD1306_Init(I2C_HandleTypeDef* hi2c)
 {

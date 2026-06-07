@@ -12,4 +12,7 @@ void SSD1306_Init(I2C_HandleTypeDef* hi2c);
 void SSD1306_Set_Pixel(uint8_t x, uint8_t y);
 bool SSD1306_Try_Update();
 
+void SSD1306_Draw_String(int x, int y, const char* str);
+void SSD1306_Draw_Char(int x, int y, char c);
+
 extern I2C_HandleTypeDef* SSD1306_HI2C1;
